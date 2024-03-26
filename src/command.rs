@@ -112,7 +112,7 @@ pub fn match_statment(current_statement: &str) -> StatementType {
     return StatementType::NameType(current_statement);
 }
 
-fn string_check(main_str: &str, check_str: &str, caps: bool) -> bool {
+pub fn string_check(main_str: &str, check_str: &str, caps: bool) -> bool {
     if main_str.trim() == check_str.to_string() {
         return true;
     }
@@ -124,7 +124,7 @@ fn string_check(main_str: &str, check_str: &str, caps: bool) -> bool {
     return false;
 }
 
-fn data_type_check(current_statement: &str) -> bool {
+pub fn data_type_check(current_statement: &str) -> bool {
     if string_check(current_statement, "int", true) {
         return true;
     }

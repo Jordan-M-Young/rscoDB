@@ -1,6 +1,8 @@
+use crate::{
+    command::{data_type_check, StatementType},
+    table::{match_data_type, ColumnSchema, DataTypes},
+};
 use std::collections::HashMap;
-
-use crate::{command::StatementType, table::ColumnSchema};
 
 #[derive(Debug)]
 pub struct SelectPlan {
@@ -32,7 +34,8 @@ pub enum PlanTypes {
     CreateTableType(CreateTablePlan),
     MetaType(MetaPlan),
     InvalidPlan,
-    ShowPlan,
+    ShowDataBasesPlan,
+    ShowTablesPlan,
 }
 
 #[derive(Debug)]
@@ -67,10 +70,21 @@ pub fn build_plan(statements: Vec<StatementType>) -> PlanTypes {
                     }
                     PlanTypes::InvalidPlan
                 }
+                StatementType::TableType => {
+                    let plan = build_create_table_plan(&statements);
+                    return PlanTypes::CreateTableType(plan);
+                }
                 _ => PlanTypes::InvalidPlan,
             }
         }
-        StatementType::ShowType => PlanTypes::ShowPlan,
+        StatementType::ShowType => {
+            let ptr_1 = 1;
+            match &statements[ptr_1] {
+                StatementType::TableType => PlanTypes::ShowTablesPlan,
+                StatementType::DataBaseType => PlanTypes::ShowDataBasesPlan,
+                _ => PlanTypes::InvalidPlan,
+            }
+        }
         _ => PlanTypes::InvalidPlan,
     };
 
@@ -90,6 +104,45 @@ fn build_create_db_plan(statements: &Vec<StatementType>) -> CreateDataBasePlan {
     }
 }
 
+fn build_create_table_plan(statements: &Vec<StatementType>) -> CreateTablePlan {
+    let mut ptr_2 = 2;
+    let length = statements.len();
+
+    let name = match &statements[ptr_2] {
+        StatementType::NameType(db_name) => db_name.to_owned(),
+        _ => "".to_string(),
+    };
+
+    let mut schema: Vec<ColumnSchema> = vec![];
+    ptr_2 += 1;
+    let mut current_col_name = String::new();
+    let mut current_val_type = DataTypes::Null;
+
+    while ptr_2 <= length - 1 {
+        match &statements[ptr_2] {
+            StatementType::NameType(value) => {
+                current_col_name = value.to_string();
+                ptr_2 += 1;
+            }
+            StatementType::ValueTypeType(value) => {
+                current_val_type = match_data_type(&value);
+                schema.push(ColumnSchema {
+                    column_name: current_col_name.clone(),
+                    column_type: current_val_type,
+                });
+
+                ptr_2 += 1;
+            }
+            _ => {}
+        }
+    }
+
+    CreateTablePlan {
+        table: name,
+        schema,
+    }
+}
+
 fn build_select_plan(statements: &Vec<StatementType>) -> SelectPlan {
     let mut ptr_1 = 1;
     let mut column_flag = true;
@@ -104,7 +157,8 @@ fn build_select_plan(statements: &Vec<StatementType>) -> SelectPlan {
                 if column_flag {
                     columns.push(val.to_string());
                 } else {
-                    table = val.to_string()
+                    table = val.to_string();
+                    break;
                 }
                 ptr_1 += 1;
             }

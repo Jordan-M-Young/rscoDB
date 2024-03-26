@@ -1,6 +1,6 @@
 use crate::{
     plan::{MetaPlan, SelectPlan},
-    table::Manifest,
+    table::{DataBase, Manifest},
 };
 
 pub fn execute_meta_plan(meta_plan: MetaPlan) {
@@ -16,4 +16,12 @@ pub fn execute_show_plan(manifest: &Manifest) {
     for (name, database) in &manifest.databases {
         println!("{}", name)
     }
+}
+
+pub fn execute_show_table_plan(db: &DataBase) {
+    println!("Database: {}\n--------", db.name);
+    for (name, table) in &db.tables {
+        println!("{}", name)
+    }
+    println!("-------")
 }
