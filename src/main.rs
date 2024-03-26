@@ -94,6 +94,20 @@ fn main() {
                 let current_db = &manifest.databases.get(&current_db_name).unwrap();
                 execute::execute_show_table_plan(&current_db)
             }
+            plan::PlanTypes::DropTablePlan(table_name) => {
+                match manifest.databases.get(&current_db_name) {
+                    Some(entry) => {
+                        let mut entry = entry.clone();
+                        entry.tables.remove(&table_name);
+                        manifest.databases.insert(current_db_name.clone(), entry);
+                    }
+
+                    _ => {}
+                }
+            }
+            plan::PlanTypes::DropDataBasePlan(db_name) => {
+                manifest.databases.remove(&db_name);
+            }
             _ => {
                 println!("Not implemented yet!")
             }

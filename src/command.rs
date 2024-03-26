@@ -23,6 +23,8 @@ pub enum StatementType {
     MetaType(String),
     OperatorType(String),
     ShowType,
+    DropType,
+    ConnectType,
 }
 
 pub struct Statement {
@@ -107,6 +109,9 @@ pub fn match_statment(current_statement: &str) -> StatementType {
 
     if string_check(&current_statement, "show", true) {
         return StatementType::ShowType;
+    }
+    if string_check(&current_statement, "drop", true) {
+        return StatementType::DropType;
     }
 
     return StatementType::NameType(current_statement);

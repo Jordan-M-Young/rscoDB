@@ -36,6 +36,8 @@ pub enum PlanTypes {
     InvalidPlan,
     ShowDataBasesPlan,
     ShowTablesPlan,
+    DropDataBasePlan(String),
+    DropTablePlan(String),
 }
 
 #[derive(Debug)]
@@ -84,6 +86,11 @@ pub fn build_plan(statements: Vec<StatementType>) -> PlanTypes {
                 StatementType::DataBaseType => PlanTypes::ShowDataBasesPlan,
                 _ => PlanTypes::InvalidPlan,
             }
+        }
+        StatementType::DropType => {
+            let x = build_drop_plan(&statements);
+            println!("{:?}", &x);
+            x
         }
         _ => PlanTypes::InvalidPlan,
     };
@@ -181,4 +188,19 @@ fn validate_select_plan(plan: &SelectPlan) -> PlanState {
     }
 
     PlanState::Invalid
+}
+
+fn build_drop_plan(statements: &Vec<StatementType>) -> PlanTypes {
+    let ptr_1 = 1;
+    let ptr_2 = 2;
+    let name = match &statements[ptr_2] {
+        StatementType::NameType(value) => value,
+        _ => return PlanTypes::InvalidPlan,
+    };
+
+    match &statements[ptr_1] {
+        StatementType::DataBaseType => PlanTypes::DropDataBasePlan(name.to_string()),
+        StatementType::TableType => PlanTypes::DropTablePlan(name.to_string()),
+        _ => return PlanTypes::InvalidPlan,
+    }
 }
