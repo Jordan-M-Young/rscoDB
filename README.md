@@ -26,6 +26,11 @@ CREATE DATABASE my_database
 ```sql
 SHOW DATABASE
 ```
+### Drop Database
+
+```sql
+DROP DATABASE db_name
+```
 
 ### Create Table
 
@@ -36,6 +41,11 @@ CREATE TABLE table_name (field_a int, field_b varchar)
 ### Show Database Tables
 ```sql
 SHOW TABLE
+```
+
+### Drop Database Table
+```sql
+DROP TABLE table_name
 ```
 
 
