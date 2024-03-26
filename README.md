@@ -1,6 +1,14 @@
 # rscoDB
 Relational Database Implementation
 
+## Run 
+
+```bash
+cargo run
+```
+
+
+
 
 # SQL
 
@@ -16,7 +24,18 @@ CREATE DATABASE my_database
 ### Show Databases
 
 ```sql
-SHOW
+SHOW DATABASE
+```
+
+### Create Table
+
+```sql
+CREATE TABLE table_name (field_a int, field_b varchar)
+```
+
+### Show Database Tables
+```sql
+SHOW TABLE
 ```
 
 
