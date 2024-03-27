@@ -104,7 +104,9 @@ pub fn match_statment(current_statement: &str) -> StatementType {
     if string_check(&current_statement, "table", true) {
         return StatementType::TableType;
     }
-
+    if string_check(&current_statement, "connect", true) {
+        return StatementType::ConnectType;
+    }
     if data_type_check(&current_statement) {
         return StatementType::ValueTypeType(current_statement);
     }

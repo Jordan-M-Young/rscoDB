@@ -45,6 +45,7 @@ pub enum PlanTypes {
     ShowTablesPlan,
     DropDataBasePlan(String),
     DropTablePlan(String),
+    ConnectPlan(String),
 }
 
 #[derive(Debug)]
@@ -99,6 +100,7 @@ pub fn build_plan(statements: Vec<StatementType>) -> PlanTypes {
             println!("{:?}", &x);
             x
         }
+        StatementType::ConnectType => build_connect_plan(&statements),
         _ => PlanTypes::InvalidPlan,
     };
 
@@ -260,4 +262,12 @@ fn create_insert_plan(statements: &Vec<StatementType>) -> PlanTypes {
     };
 
     PlanTypes::InsertPlan(plan)
+}
+
+fn build_connect_plan(statements: &Vec<StatementType>) -> PlanTypes {
+    let ptr_1 = 1;
+    match &statements[ptr_1] {
+        StatementType::NameType(name) => PlanTypes::ConnectPlan(name.to_string()),
+        _ => PlanTypes::InvalidPlan,
+    }
 }

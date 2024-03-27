@@ -4,13 +4,14 @@ use crate::{
     command::{Statement, StatementType},
     plan::MetaPlan,
     table::{DataBase, DataTypes, Table},
+    tree::{build_select_syntax_tree, walk_tree},
 };
 pub mod command;
 pub mod execute;
 pub mod parse;
 pub mod plan;
 pub mod table;
-
+pub mod tree;
 fn main() {
     println!("Welcome to roscoeDB v0.0.0");
 
@@ -22,7 +23,7 @@ fn main() {
     };
 
     databases.insert("default".to_string(), current_db);
-    let current_db_name = "default".to_string();
+    let mut current_db_name = "default".to_string();
     let mut manifest = table::Manifest { databases };
 
     loop {
@@ -147,6 +148,15 @@ fn main() {
             plan::PlanTypes::DropDataBasePlan(db_name) => {
                 manifest.databases.remove(&db_name);
             }
+            plan::PlanTypes::ConnectPlan(db_name) => match manifest.databases.get(&db_name) {
+                Some(_database) => {
+                    current_db_name = db_name;
+                    println!("Connected to Database: {}", &current_db_name);
+                }
+                _ => {
+                    println!("Database not found.")
+                }
+            },
             _ => {
                 println!("Not implemented yet!")
             }
