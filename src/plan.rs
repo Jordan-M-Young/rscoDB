@@ -1,5 +1,6 @@
 use crate::{
     command::{data_type_check, StatementType},
+    parse::parse_string,
     table::{match_data_type, ColumnSchema, DataTypes},
 };
 use std::collections::HashMap;
@@ -8,6 +9,12 @@ use std::collections::HashMap;
 pub struct SelectPlan {
     pub columns: Vec<String>,
     pub table: String,
+}
+
+#[derive(Debug)]
+pub struct InsertPlan {
+    pub table: String,
+    pub values: Vec<DataTypes>,
 }
 
 #[derive(Debug)]
@@ -29,7 +36,7 @@ pub struct CreateTablePlan {
 #[derive(Debug)]
 pub enum PlanTypes {
     SelectType(SelectPlan),
-    InsertPlan,
+    InsertPlan(InsertPlan),
     CreateDataBaseType(CreateDataBasePlan),
     CreateTableType(CreateTablePlan),
     MetaType(MetaPlan),
@@ -58,7 +65,7 @@ pub fn build_plan(statements: Vec<StatementType>) -> PlanTypes {
                 PlanState::Invalid => PlanTypes::InvalidPlan,
             }
         }
-        StatementType::InsertType => PlanTypes::InsertPlan,
+        StatementType::InsertType => create_insert_plan(&statements),
         StatementType::MetaType(value) => PlanTypes::MetaType(MetaPlan {
             command: value.to_string(),
         }),
@@ -203,4 +210,54 @@ fn build_drop_plan(statements: &Vec<StatementType>) -> PlanTypes {
         StatementType::TableType => PlanTypes::DropTablePlan(name.to_string()),
         _ => return PlanTypes::InvalidPlan,
     }
+}
+
+fn create_insert_plan(statements: &Vec<StatementType>) -> PlanTypes {
+    let ptr_1 = 1;
+    let ptr_2 = 2;
+    let ptr_3 = 3;
+    let mut ptr_4 = 4;
+
+    println!("{:?}", &statements);
+
+    let statements_length = statements.len();
+    match &statements[ptr_1] {
+        StatementType::IntoType => {}
+        _ => {
+            return PlanTypes::InvalidPlan;
+        }
+    }
+
+    let table_name = match &statements[ptr_2] {
+        StatementType::NameType(name) => name,
+        _ => return PlanTypes::InvalidPlan,
+    };
+
+    match &statements[ptr_3] {
+        StatementType::ValuesType => {}
+        _ => return PlanTypes::InvalidPlan,
+    }
+
+    let mut values: Vec<DataTypes> = vec![];
+    while ptr_4 <= statements_length - 1 {
+        match &statements[ptr_4] {
+            StatementType::NameType(value) => {
+                let value = value.replace(",", "").replace("(", "").replace(")", "");
+                match parse_string(&value) {
+                    Some(value) => values.push(value),
+                    _ => {}
+                }
+
+                ptr_4 += 1
+            }
+            _ => ptr_4 += 1,
+        }
+    }
+
+    let plan = InsertPlan {
+        table: table_name.to_string(),
+        values,
+    };
+
+    PlanTypes::InsertPlan(plan)
 }

@@ -11,10 +11,8 @@ pub struct Table {
 
 #[derive(Debug, Clone)]
 pub enum DataTypes {
-    U32Type(u32),
-    I32Type(i32),
+    IntType(isize),
     FloatType(f32),
-    U8Type(u8),
     StringType(String),
     Null,
 }
@@ -37,7 +35,7 @@ pub struct Manifest {
 
 pub fn match_data_type(current_statement: &str) -> DataTypes {
     if string_check(current_statement, "int", true) {
-        return DataTypes::I32Type(0);
+        return DataTypes::IntType(0);
     }
 
     if string_check(current_statement, "float", true) {

@@ -18,6 +18,7 @@ pub enum StatementType {
     InsertType,
     IntoType,
     ValueTypeType(String),
+    ValuesType,
     FromType,
     NameType(String),
     MetaType(String),
@@ -75,7 +76,12 @@ pub fn match_statment(current_statement: &str) -> StatementType {
     if string_check(&current_statement, "insert", true) {
         return StatementType::InsertType;
     }
-
+    if string_check(&current_statement, "into", true) {
+        return StatementType::IntoType;
+    }
+    if string_check(&current_statement, "values", true) {
+        return StatementType::ValuesType;
+    }
     if string_check(&current_statement, "from", true) {
         return StatementType::FromType;
     }

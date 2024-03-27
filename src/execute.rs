@@ -13,14 +13,14 @@ pub fn execute_select_plan(select_plan: SelectPlan) {
 
 pub fn execute_show_plan(manifest: &Manifest) {
     println!("Database\n--------");
-    for (name, database) in &manifest.databases {
+    for (name, _database) in &manifest.databases {
         println!("{}", name)
     }
 }
 
 pub fn execute_show_table_plan(db: &DataBase) {
     println!("Database: {}\n--------", db.name);
-    for (name, table) in &db.tables {
+    for (name, _table) in &db.tables {
         println!("{}", name)
     }
     println!("-------")

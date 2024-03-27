@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io::prelude::*};
+use std::{any::Any, collections::HashMap, io::prelude::*};
 
 use crate::{
     command::{Statement, StatementType},
@@ -7,6 +7,7 @@ use crate::{
 };
 pub mod command;
 pub mod execute;
+pub mod parse;
 pub mod plan;
 pub mod table;
 
@@ -53,7 +54,45 @@ fn main() {
 
                 execute::execute_meta_plan(plan)
             }
-            plan::PlanTypes::SelectType(plan) => execute::execute_select_plan(plan),
+            plan::PlanTypes::SelectType(plan) => {
+                if plan.columns[0] == "*" {
+                    match manifest.databases.get(&current_db_name) {
+                        Some(database) => match database.tables.get(&plan.table) {
+                            Some(table) => {
+                                for row in &table.rows {
+                                    println!("{:?}", row)
+                                }
+                            }
+                            _ => {}
+                        },
+                        _ => {}
+                    }
+                }
+            }
+            plan::PlanTypes::InsertPlan(plan) => {
+                match manifest.databases.get(&current_db_name) {
+                    Some(database) => {
+                        match database.tables.get(&plan.table) {
+                            Some(table) => {
+                                // pub struct Table {
+                                //     pub name: String,
+                                //     pub rows: Vec<Vec<DataTypes>>,
+                                //     pub n_columns: usize,
+                                //     pub columns: HashMap<String, DataTypes>,
+                                // }
+                                let mut table = table.clone();
+                                let mut database = database.clone();
+                                table.rows.push(plan.values);
+
+                                database.tables.insert(plan.table, table);
+                                manifest.databases.insert(current_db_name.clone(), database);
+                            }
+                            _ => {}
+                        }
+                    }
+                    _ => {}
+                }
+            }
             plan::PlanTypes::CreateTableType(plan) => {
                 let n_columns = plan.schema.len();
                 let mut columns: HashMap<String, DataTypes> = HashMap::new();
@@ -112,30 +151,19 @@ fn main() {
                 println!("Not implemented yet!")
             }
         }
-
-        // if buf.starts_with(".") {
-        //     match command::process_meta_command(&buf) {
-        //         command::CommandResult::CommandSuccess => {
-        //             println!("Executed: {}", buf)
-        //         }
-        //         command::CommandResult::CommandFailure => {
-        //             println!("Unrecognized command: {}", buf)
-        //         }
-        //         command::CommandResult::CommandQuit => {
-        //             println!("Exiting...");
-        //             break;
-        //         }
-        //     }
-        // } else {
-        //     match command::process_command(&buf) {
-        //         command::CommandResult::CommandSuccess => {
-        //             println!("Executed: {}", buf)
-        //         }
-        //         command::CommandResult::CommandFailure => {
-        //             println!("Unrecognized command: {}", buf)
-        //         }
-        //         _ => {}
-        //     }
-        // }
     }
 }
+
+// let  alpha_numeric = "1234567890";
+// let mut  x = "123".to_string();
+// println!("{}",x);
+
+// let mut  y = "1.0".to_string();
+// let mut z = "one".to_string();
+
+// let a = parse::parse_string(&y);
+// let b = parse::parse_string(&x);
+// let c = parse::parse_string(&z);
+// println!("{:?}",a);
+// println!("{:?}",b);
+// println!("{:?}",c);
