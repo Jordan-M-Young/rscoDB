@@ -20,6 +20,12 @@ For rscoDB, we'll try to mirror the SQL syntax used by [Postgres](https://www.po
 ```sql
 CREATE DATABASE my_database
 ```
+### Connect to Database
+
+```sql
+CONNECT database_name
+```
+
 #### Show Databases
 
 ```sql
