@@ -1,5 +1,25 @@
 # rscoDB
-Relational Database Implementation
+This is a from scratch implementation of a Relational Database in rust. The goal here is for myself and perhaps others 
+to more deeply understand the inner workings of popular relational database systems like postgres by attempting to build
+an analog system. Some things this project will focus on are:
+
+    - SQL Syntax
+        - Supporting Basic Statements/Logic (SELECT, INSERT, CREATE, FROM, etc...)
+        - Validating command syntax
+    - Command Plans
+        - SQL syntax -> Plan structs containing information required to programmatically execute command
+        - Plan validation 
+    - DataStorage
+        - In memory -> Single File (Sqlite) -> PG_DATA directory (Postgres)
+    - ACID
+    - External Client
+        - Support external client access
+        - Write basic python client
+
+## Current Focus
+
+Currently I'm focusing on finishing up basic som SQL syntax and accompanying logic. You can see what SQL statements are supported currently. At this time input commmands are very lightly validated, so further work will be required for a more robust validation system.
+
 
 ## Run 
 
