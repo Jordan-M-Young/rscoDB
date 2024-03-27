@@ -7,45 +7,59 @@ Relational Database Implementation
 cargo run
 ```
 
-
-
-
 # SQL
 
 For rscoDB, we'll try to mirror the SQL syntax used by [Postgres](https://www.postgresql.org/docs/current/sql-syntax.html).
 
 ## Supported Commands
 
-### Create Database
+### Database
+
+#### Create Database
 
 ```sql
 CREATE DATABASE my_database
 ```
-### Show Databases
+#### Show Databases
 
 ```sql
 SHOW DATABASE
 ```
-### Drop Database
+#### Drop Database
 
 ```sql
 DROP DATABASE db_name
 ```
+### Table
 
-### Create Table
+#### Create Table
 
 ```sql
 CREATE TABLE table_name (field_a int, field_b varchar)
 ```
 
-### Show Database Tables
+#### Show Database Tables
 ```sql
 SHOW TABLE
 ```
 
-### Drop Database Table
+#### Drop Database Table
 ```sql
 DROP TABLE table_name
+```
+
+### Inserting Rows
+
+```sql
+INSERT INTO table_name VALUES (1, hello, 3.0)
+```
+
+### Querying
+
+#### The only query right now lol
+
+```sql
+SELECT * FROM table_name
 ```
 
 
