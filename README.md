@@ -18,7 +18,7 @@ an analog system. Some things this project will focus on are:
 
 ## Current Focus
 
-Currently I'm focusing on finishing up basic som SQL syntax and accompanying logic. You can see what SQL statements are supported currently. At this time input commmands are very lightly validated, so further work will be required for a more robust validation system.
+Currently I'm focusing on finishing up sine basic SQL syntax and accompanying logic. You can see what SQL statements are supported currently. At this time input commmands are very lightly validated, so further work will be required for a more robust validation system.
 
 
 ## Run 
