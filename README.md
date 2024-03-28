@@ -1,6 +1,6 @@
 # rscoDB
 
-![Build](https://github.com/Jordan-M-Young/rscoDB/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/Jordan-M-Young/rscoDB/actions/workflows/build.yml/badge.svg) ![Tests](https://github.com/Jordan-M-Young/rscoDB/actions/workflows/test.yml/badge.svg)
 
 This is a from scratch implementation of a Relational Database in rust. The goal here is for myself and perhaps others 
 to more deeply understand the inner workings of popular relational database systems like postgres by attempting to build
