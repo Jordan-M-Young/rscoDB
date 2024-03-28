@@ -1,4 +1,7 @@
 # rscoDB
+
+![example workflow](https://github.com/Jordan-M-Young/rscoDB/.github/workflows/rust.yml/badge.svg)
+
 This is a from scratch implementation of a Relational Database in rust. The goal here is for myself and perhaps others 
 to more deeply understand the inner workings of popular relational database systems like postgres by attempting to build
 an analog system. Some things this project will focus on are:
