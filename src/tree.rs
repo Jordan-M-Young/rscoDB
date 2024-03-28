@@ -4,36 +4,36 @@ use crate::StatementType;
 pub struct Node {
     node_type: StatementType,
     child_nodes: Vec<Node>,
-    mirror_child: bool,
+    _mirror_child: bool,
 }
 
 pub fn build_select_syntax_tree() -> Node {
-    let mut child_nodes: Vec<Node> = vec![];
+    let child_nodes: Vec<Node> = vec![];
     let mut select_node = Node {
         node_type: StatementType::SelectType,
         child_nodes,
-        mirror_child: false,
+        _mirror_child: false,
     };
 
-    let mut child_nodes: Vec<Node> = vec![];
+    let child_nodes: Vec<Node> = vec![];
     let mut columns_node = Node {
         node_type: StatementType::NameType(String::new()),
         child_nodes,
-        mirror_child: true,
+        _mirror_child: true,
     };
 
-    let mut child_nodes: Vec<Node> = vec![];
+    let child_nodes: Vec<Node> = vec![];
     let mut from_node = Node {
         node_type: StatementType::FromType,
         child_nodes,
-        mirror_child: false,
+        _mirror_child: false,
     };
 
-    let mut child_nodes: Vec<Node> = vec![];
+    let child_nodes: Vec<Node> = vec![];
     let table_name_node = Node {
         node_type: StatementType::NameType(String::new()),
         child_nodes,
-        mirror_child: false,
+        _mirror_child: false,
     };
 
     from_node.child_nodes.push(table_name_node);

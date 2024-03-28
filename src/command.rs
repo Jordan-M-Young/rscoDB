@@ -1,7 +1,5 @@
 // use crate::table::{DataTypes, Table};
 
-use std::string;
-
 pub enum CommandResult {
     CommandSuccess,
     CommandFailure,

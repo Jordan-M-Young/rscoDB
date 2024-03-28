@@ -1,9 +1,8 @@
 use crate::{
-    command::{data_type_check, StatementType},
+    command::StatementType,
     parse::parse_string,
     table::{match_data_type, ColumnSchema, DataTypes},
 };
-use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct SelectPlan {
@@ -55,7 +54,7 @@ pub enum PlanState {
 }
 
 pub fn build_plan(statements: Vec<StatementType>) -> PlanTypes {
-    let mut ptr_0 = 0;
+    let ptr_0 = 0;
 
     let plan_type = match &statements[ptr_0] {
         StatementType::SelectType => {
@@ -132,7 +131,6 @@ fn build_create_table_plan(statements: &Vec<StatementType>) -> CreateTablePlan {
     let mut schema: Vec<ColumnSchema> = vec![];
     ptr_2 += 1;
     let mut current_col_name = String::new();
-    let mut current_val_type = DataTypes::Null;
 
     while ptr_2 <= length - 1 {
         match &statements[ptr_2] {
@@ -141,7 +139,7 @@ fn build_create_table_plan(statements: &Vec<StatementType>) -> CreateTablePlan {
                 ptr_2 += 1;
             }
             StatementType::ValueTypeType(value) => {
-                current_val_type = match_data_type(&value);
+                let current_val_type = match_data_type(&value);
                 schema.push(ColumnSchema {
                     column_name: current_col_name.clone(),
                     column_type: current_val_type,

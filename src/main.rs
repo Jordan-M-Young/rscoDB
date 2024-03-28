@@ -1,10 +1,8 @@
-use std::{any::Any, collections::HashMap, io::prelude::*};
+use std::{collections::HashMap, io::prelude::*};
 
 use crate::{
-    command::{Statement, StatementType},
-    plan::MetaPlan,
+    command::StatementType,
     table::{DataBase, DataTypes, Table},
-    tree::{build_select_syntax_tree, walk_tree},
 };
 pub mod command;
 pub mod execute;
@@ -16,8 +14,8 @@ fn main() {
     println!("Welcome to roscoeDB v0.0.0");
 
     let mut databases: HashMap<String, DataBase> = HashMap::new();
-    let mut default_tables: HashMap<String, Table> = HashMap::new();
-    let mut current_db = DataBase {
+    let default_tables: HashMap<String, Table> = HashMap::new();
+    let current_db = DataBase {
         tables: default_tables,
         name: "default".to_string(),
     };

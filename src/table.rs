@@ -9,7 +9,7 @@ pub struct Table {
     pub columns: HashMap<String, DataTypes>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum DataTypes {
     IntType(isize),
     FloatType(f32),
