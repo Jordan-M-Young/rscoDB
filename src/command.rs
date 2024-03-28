@@ -6,7 +6,7 @@ pub enum CommandResult {
     CommandQuit,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum StatementType {
     NullType,
     SelectType,
@@ -128,7 +128,7 @@ pub fn string_check(main_str: &str, check_str: &str, caps: bool) -> bool {
         return true;
     }
 
-    if main_str.trim() == check_str.to_string().to_uppercase() && caps {
+    if main_str.trim().to_uppercase() == check_str.to_string().to_uppercase() && caps {
         return true;
     }
 
@@ -172,4 +172,128 @@ fn operator_check(current_statement: &str) -> bool {
     }
 
     false
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::command::{data_type_check, match_statment, string_check};
+
+    use super::{operator_check, StatementType};
+
+    struct StatementPair {
+        a: String,
+        b: StatementType,
+    }
+
+    struct Pair {
+        a: String,
+        b: bool,
+    }
+
+    struct Quad {
+        a: String,
+        b: String,
+        c: bool,
+        d: bool,
+    }
+
+    impl StatementPair {
+        fn new(a: &str, b: StatementType) -> StatementPair {
+            StatementPair {
+                a: a.to_string(),
+                b,
+            }
+        }
+    }
+
+    impl Pair {
+        fn new(a: &str, b: bool) -> Pair {
+            Pair {
+                a: a.to_string(),
+                b,
+            }
+        }
+    }
+
+    impl Quad {
+        fn new(a: &str, b: &str, c: bool, d: bool) -> Quad {
+            Quad {
+                a: a.to_string(),
+                b: b.to_string(),
+                c,
+                d,
+            }
+        }
+    }
+
+    #[test]
+    fn test_operator_check() {
+        let pairs: Vec<Pair> = vec![
+            Pair::new("==", true),
+            Pair::new("!=", true),
+            Pair::new(">", true),
+            Pair::new("<", true),
+            Pair::new("=<", true),
+            Pair::new(">=", true),
+            Pair::new("z", false),
+            Pair::new("1", false),
+            Pair::new("@", false),
+        ];
+
+        for pair in pairs {
+            assert_eq!(operator_check(&pair.a), pair.b)
+        }
+    }
+
+    #[test]
+    fn test_data_type_check() {
+        let pairs: Vec<Pair> = vec![
+            Pair::new("int", true),
+            Pair::new("INT", true),
+            Pair::new("float", true),
+            Pair::new("FLOAT", true),
+            Pair::new("varchar", true),
+            Pair::new("VARCHAR", true),
+            Pair::new("VARCAR", false),
+            Pair::new("floot", false),
+            Pair::new("", false),
+            Pair::new("text", false),
+        ];
+
+        for pair in pairs {
+            assert_eq!(data_type_check(&pair.a), pair.b)
+        }
+    }
+
+    #[test]
+    fn test_string_check() {
+        let quads: Vec<Quad> = vec![
+            Quad::new("select", "select", false, true),
+            Quad::new("SELECT", "select", false, false),
+            Quad::new("select", "SELECT", true, true),
+            Quad::new("INSERT", "select", true, false),
+        ];
+
+        for quad in quads {
+            assert_eq!(string_check(&quad.a, &quad.b, quad.c), quad.d)
+        }
+    }
+
+    #[test]
+    fn test_match_statement() {
+        // need to be exhaustive with statement types...
+        let statement_pairs: Vec<StatementPair> = vec![
+            StatementPair::new("select", StatementType::SelectType),
+            StatementPair::new("from", StatementType::FromType),
+            StatementPair::new(
+                "table_name",
+                StatementType::NameType("table_name".to_string()),
+            ),
+            StatementPair::new("TABLE", StatementType::TableType),
+        ];
+
+        for pair in statement_pairs {
+            assert_eq!(match_statment(&pair.a), pair.b)
+        }
+    }
 }

@@ -48,3 +48,32 @@ pub fn match_data_type(current_statement: &str) -> DataTypes {
 
     DataTypes::Null
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{match_data_type, DataTypes};
+
+    #[test]
+    fn test_match_data_type() {
+        let a = match_data_type("int");
+        let b = match_data_type("float");
+        let c = match_data_type("varchar");
+        let d = match_data_type("INT");
+        let e = match_data_type("FLOAT");
+        let f = match_data_type("VARCHAR");
+        let g = match_data_type("GLORB");
+
+        let u = DataTypes::IntType(0);
+        let v = DataTypes::FloatType(0.0);
+        let w = DataTypes::StringType(String::new());
+        let x = DataTypes::Null;
+
+        assert_eq!(a, u);
+        assert_eq!(b, v);
+        assert_eq!(c, w);
+        assert_eq!(d, u);
+        assert_eq!(e, v);
+        assert_eq!(f, w);
+        assert_eq!(g, x);
+    }
+}
